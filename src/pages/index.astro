@@ -2,14 +2,25 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
+<head>
+<meta charset="UTF-8">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
+</head>
 <Layout>
 	<Navbar />
-	<main class="ml-64">
-
+	<main class="ml-64 min-h-screen p-6 text-center">
+		<h1 class="text-7xl text-center text-[#6C4637] mb-8" style="font-family: 'LXGW WenKai Mono TC', monospace;">
+			Recetópolis
+		</h1>
+		<img src="public/recetopolis.png" class="mx-auto h-30">
 	</main>
 	<Footer />
 </Layout>
