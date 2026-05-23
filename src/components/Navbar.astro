@@ -11,16 +11,32 @@
         </div>
 
         <nav class="flex flex-col gap-2">
-            <a href="/perfil" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white" > <i class="fi fi-ss-mouse-field"></i> <span>Mi Perfil</span> </a>
-            <a href="/perfil" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white" > <i class="fi fi-rr-heart"></i> <span>Favoritos</span> </a>
-            <a href="/perfil" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white" > <i class="fi fi-rr-book-alt"></i> <span>Mis Recetas</span> </a>
+            <a href="/perfil" class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
+                <i class="fi fi-rs-mouse-field group-hover:hidden"></i>
+                <i class="fi fi-ss-mouse-field group hidden group-hover:block"></i>
+
+                <span>Mi Perfil</span>
+            </a>
+
+            <a href="/perfil" class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
+                <i class="fi fi-rr-heart group-hover:hidden"></i>
+                <i class="fi fi-sr-heart group hidden group-hover:block"></i>
+                
+                <span>Favoritos</span>
+            </a>
+
+            <a href="/perfil" class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
+                <i class="fi fi-rr-book-alt group-hover:hidden"></i>
+                <i class="fi fi-sr-book-alt group hidden group-hover:block"></i>
+                <span>Mis Recetas</span> </a>
         </nav>
     </div>
 
     <div class="border-t border-[#6C4637] pt-4 flex flex-col">
-        <button class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white">
-        
-            <i class="fi fi-rs-leave"></i> <span>Cerrar Sesion</span>
+        <button class=" group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
+            <i class="fi fi-rs-leave group-hover:hidden"></i>
+            <i class="fi fi-ss-leave group hidden group-hover:block"></i>
+            <span>Cerrar Sesión</span>
         </button>
     </div>
 </div>
