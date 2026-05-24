@@ -1,6 +1,8 @@
 import mongoose from "mongoose"
 import {config} from "dotenv"
 import { Recipe } from "../src/models/Recipe"
+import { Review } from "../src/models/Review"
+import { User } from "../src/models/Users"
 
 config() // Carga las variables de entorno
 
@@ -64,6 +66,27 @@ const recipes = [{
 }
 ]
 
+const users = [{
+    username: "admin",
+    email: "admin@example.com",
+    password: "admin123",
+    favoriteRecipes: ["6a12697ceed750f5b4223377"]
+},
+{
+    username: "user1",
+    email: "user1@example.com",
+    password: "user123",
+    favoriteRecipes: ["6a12697ceed750f5b4223377", "6a12697ceed750f5b4223378"]
+}
+]
+
+const review = [{
+    recipeId: "6a12697ceed750f5b4223377",
+    userId: "user1",
+    rating: 5,
+    comment: "¡Deliciosos hotcakes! Muy esponjosos y fáciles de hacer.",
+}]
+
 async function seed() {
    try {
         await mongoose.connect(process.env.MONGODB_URI || '')
@@ -71,6 +94,18 @@ async function seed() {
 
         await Recipe.deleteMany({})
         console.log('Recetas eliminadas')
+
+        await User.deleteMany({})
+        console.log('Usuarios eliminados')
+
+        await Review.deleteMany({})
+        console.log('Reseñas eliminadas')
+
+        await User.insertMany(users)
+        console.log('Usuarios insertados:', users.length)
+
+        await Review.insertMany(review)
+        console.log('Reseñas insertadas:', review.length)  
         
         await Recipe.insertMany(recipes)
         console.log('Recetas insertadas:', recipes.length)
