@@ -7,20 +7,164 @@ import Footer from '../components/Footer.astro';
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<head>
-<meta charset="UTF-8">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-	<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
-</head>
 <Layout>
 	<Navbar />
-	<main class="ml-64 min-h-screen p-6 text-center">
-		<h1 class="text-7xl text-center text-[#6C4637] mb-8" style="font-family: 'LXGW WenKai Mono TC', monospace;">
-			Recetópolis
-		</h1>
-		<img src="public/recetopolis.png" class="mx-auto h-30">
-	</main>
+	<main class="ml-64 bg-[#F4F3EF] min-h-screen p-8 overflow-x-hidden">
+		<!-- <img src="public/recetopolis.png" class="mx-auto h-30">-->
+
+    <!-- TITULO -->
+    <h1 class="text-5xl text-center text-[#6C4637] font-bold mb-12">
+        Recetópolis
+    </h1>
+
+    <!-- ================= POPULARES ================= -->
+    <section class="mb-14">
+
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-2xl font-semibold text-[#6C4637]">
+                Populares
+            </h2>
+
+            <button onclick="scrollCarousel('populares', 300)"
+                class="bg-[#6C4637] text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+            >
+                →
+            </button>
+        </div>
+
+        <!-- CARRUSEL -->
+        <div id="populares" class="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide pb-4">
+
+            <!-- CARD -->
+            <div class="min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
+
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" class="w-full h-44 object-cover" />
+
+                <div class="p-4">
+
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-[#6C4637]">Ensalada Fresca</h3>
+
+                        <span class="text-yellow-500">★ 4.9</span>
+                    </div>
+
+                    <p class="text-sm text-gray-600 mb-4">Una receta saludable y rápida.</p>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">⏱ 15 min</span>
+
+                        <button class="bg-[#6C4637] text-white px-3 py-2 rounded-lg hover:opacity-90">
+                            Ver receta
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
+
+                <img
+                    src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd"
+                    class="w-full h-44 object-cover"
+                />
+
+                <div class="p-4">
+
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-[#6C4637]">
+                            Pasta Italiana
+                        </h3>
+
+                        <span class="text-yellow-500">
+                            ★ 4.8
+                        </span>
+                    </div>
+
+                    <p class="text-sm text-gray-600 mb-4">
+                        Pasta cremosa con ingredientes frescos.
+                    </p>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">⏱ 25 min</span>
+                        <button class="bg-[#6C4637] text-white px-3 py-2 rounded-lg hover:opacity-90">
+                            Ver receta
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+                    class="w-full h-44 object-cover"
+                />
+
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-[#6C4637]">Hamburguesa Gourmet</h3>
+                        <span class="text-yellow-500">★ 5.0</span>
+                    </div>
+
+                    <p class="text-sm text-gray-600 mb-4">Carne artesanal y pan brioche.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">⏱ 30 min</span>
+
+                        <button class="bg-[#6C4637] text-white px-3 py-2 rounded-lg hover:opacity-90">
+                            Ver receta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= MEJOR PUNTUACION ================= -->
+    <section>
+
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-2xl font-semibold text-[#6C4637]"> Mejor puntuación </h2>
+
+            <button onclick="scrollCarousel('top', 300)"
+                class="bg-[#6C4637] text-white px-4 py-2 rounded-lg hover:scale-105 transition"
+            >→</button>
+        </div>
+
+        <div id="top" class="flex gap-6 overflow-x-auto scroll-smooth scrollbar-hide pb-4">
+
+            <!-- CARD -->
+            <div class="min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
+                <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061" class="w-full h-44 object-cover"/>
+
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-[#6C4637]">Tacos Mexicanos</h3>
+                        <span class="text-yellow-500">★ 5.0</span>
+                    </div>
+
+                    <p class="text-sm text-gray-600 mb-4">Auténtico sabor mexicano.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500"> ⏱ 20 min </span>
+                        <button class="bg-[#6C4637] text-white px-3 py-2 rounded-lg hover:opacity-90"> Ver receta </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+	<script>
+		function scrollCarousel(id, amount) {
+			const container = document.getElementById(id);
+			container.scrollBy({
+				left: amount,
+				behavior: "smooth"
+			});
+		}
+	</script>
+
 	<Footer />
 </Layout>
