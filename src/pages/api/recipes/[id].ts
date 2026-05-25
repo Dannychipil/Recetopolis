@@ -1,6 +1,6 @@
 import type {APIRoute} from 'astro';
-import { connectDB } from '../../../lib/db';
-import { Recipe } from '../../../models/Recipe';
+import { connectDB } from '@/lib/db';
+import { Recipe } from '@/models/Recipe';
 
 export const GET: APIRoute = async ({ params }) => {
   try {

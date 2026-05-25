@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
-import { connectDB } from '../../../lib/db'
-import { User } from '../../../models/Users'
+import { connectDB } from '@/lib/db'
+import { User } from '@/models/Users'
 
 export const POST: APIRoute = async ({ request }) => {
   try {

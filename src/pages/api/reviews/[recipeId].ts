@@ -1,6 +1,6 @@
 import type {APIRoute} from 'astro'
-import { connectDB } from '../../../lib/db'
-import { Review } from '../../../models/Review'
+import { connectDB } from '@/lib/db'
+import { Review } from '@/models/Review'
 
 export const GET: APIRoute = async ({ params }) => {
     try {
