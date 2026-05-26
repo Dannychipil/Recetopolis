@@ -1,0 +1,103 @@
+---
+
+---
+
+<footer id="footer">
+    <div class="footer-container">
+        <div class="footer-left">
+            <h3>Recetópolis</h3>
+            <p>Descubre, cocina y comparte tus recetas favoritas.</p>
+            <div class="social-icons">
+                <a href="https://instagram.com" target="_blank">
+                    <i class="fi fi-brands-instagram" ></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Inicio</a>
+            <a href="#">Recetas</a>
+            <a href="#">Contacto</a>
+        </div>
+
+        <div class="footer-social">
+            <a href="#">Instagram</a>
+            <a href="#">GitHub</a>
+        </div>
+    </div>
+
+    <p class="footer-copy">
+        © 2026 Recetópolis. Todos los derechos reservados.
+    </p>
+</footer>
+
+<style>
+    #footer {
+        margin-top: 50px;
+        padding: 30px 20px;
+        backdrop-filter: blur(20px);
+        background: linear-gradient(#9cab84);
+        color: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .footer-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .footer-left h3 {
+        margin-left: 300px;
+        font-size: 18px;
+        background: linear-gradient(#6e5034);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .footer-left p {
+        margin: 5px 0 0;
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    .social-icons img {
+        width: 25px;
+        height: 25px;
+    }
+    .footer-links,
+    .footer-social {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .footer-links a,
+    .footer-social a {
+        text-decoration: none;
+        color: #111827;
+        transition: color 0.2s;
+    }
+
+    .footer-links a:hover,
+    .footer-social a:hover {
+        color: #bc52ee;
+    }
+
+    .footer-copy {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 13px;
+        color: #d6deed;
+    }
+
+    @media (max-width: 768px) {
+        .footer-container {
+            flex-direction: column;
+            align-items: start;
+        }
+    }
+</style>
+
+
