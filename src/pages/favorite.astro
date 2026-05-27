@@ -1,0 +1,45 @@
+---
+// src/pages/favorite.astro
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import Card from '../components/Card.astro';
+
+// Simulamos los datos de las recetas que el usuario guardó como favoritas.
+// Usamos un array de 8 elementos para rellenar la cuadrícula temporalmente.
+const recetasFavoritas = Array.from({ length: 8 });
+---
+
+<Layout>
+    <Navbar />
+
+    <main class="ml-64 bg-[#F4F3EF] min-h-screen p-8 overflow-x-hidden">
+        
+        <div class="max-w-7xl mx-auto mb-10 border-b border-[#6C4637]/10 pb-6 flex items-center gap-4">
+            <div>
+                <h1 class="text-4xl font-bold text-[#6C4637]">Mis Recetas Favoritas</h1>
+                <p class="text-[#6D7A84] mt-1 text-sm">Las joyas culinarias que has guardado en tu recetario.</p>
+            </div>
+        </div>
+
+        <section class="max-w-7xl mx-auto mb-14">
+            
+            {/* Si no hay recetas favoritas, mostraríamos un mensaje. 
+                Por ahora, renderizamos la cuadrícula responsiva */}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                {
+                    recetasFavoritas.map(() => (
+                        <div class="transition-transform duration-200 hover:-translate-y-1">
+                            <Card />
+                        </div>
+                    ))
+                }
+
+            </div>
+
+        </section>
+    </main>
+
+    <Footer />
+</Layout>
