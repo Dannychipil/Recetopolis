@@ -1,48 +1,77 @@
 ---
-const { favorito = false } = Astro.props;
+const { 
+  id = '',
+  title = 'Sin título',
+  description = 'Sin descripción',
+  prepTime = 0,
+  rating = 0,
+  image = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c',
+  favorito = false,
+  userId = ''
+} = Astro.props
 ---
 
-<!-- CARD -->
-<div class="min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
+<div class="min-w-65 bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
+  <div class="relative">
+    <img src={image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c'} class="w-full h-44 object-cover" />
+    
+    <button
+      data-recipe-id={id}
+      data-user-id={userId}
+      data-favorito={favorito ? 'true' : 'false'}
+      class="fav-btn absolute top-3 right-3 bg-white/90 backdrop-blur-sm w-10 h-10 rounded-full shadow-md flex items-center justify-center hover:scale-110 transition"
+    >
+      {favorito ? '❤️' : '🤍'}
+    </button>
+  </div>
 
-    <!-- CONTENEDOR IMAGEN -->
-    <div class="relative">
-
-        <img
-            src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
-            class="w-full h-44 object-cover"
-        />
-
-        <!-- FAVORITOS -->
-        <button
-            class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm w-10 h-10 rounded-full shadow-md flex items-center justify-center hover:scale-110 transition"
-        >
-            {favorito ? '❤️' : '🤍'}
-        </button>
-
+  <div class="p-4">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="text-lg font-bold text-[#6C4637]">{title}</h3>
+      <span class="text-yellow-500">★ {rating.toFixed(1)}</span>
     </div>
-
-    <div class="p-4">
-
-        <div class="flex items-center justify-between mb-2">
-            <h3 class="text-lg font-bold text-[#6C4637]">
-                Ensalada Fresca
-            </h3>
-
-            <span class="text-yellow-500">
-                ★ 4.9
-            </span>
-        </div>
-
-        <p class="text-sm text-gray-600 mb-4">
-            Una receta saludable y rápida.
-        </p>
-
-        <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-500">
-                ⏱ 15 min
-            </span>
-        </div>
-
+    <p class="text-sm text-gray-600 mb-4 line-clamp-2">{description}</p>
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-gray-500">⏱ {prepTime} min</span>
+      <a href={`/recipes/${id}`} class="text-sm text-[#6C4637] font-medium hover:underline">Ver receta</a>
     </div>
+  </div>
 </div>
+
+<script>
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const recipeId = btn.getAttribute('data-recipe-id')
+      const userId   = btn.getAttribute('data-user-id')
+      const isFav    = btn.getAttribute('data-favorito') === 'true'
+
+      if (!userId) {
+        window.location.href = '/login'
+        return
+      }
+
+      if (isFav) {
+        // Quitar de favoritos
+        await fetch(`/api/users/${userId}/favorites/${recipeId}`, {
+          method: 'DELETE'
+        })
+        btn.textContent = '🤍'
+        btn.setAttribute('data-favorito', 'false')
+
+        const card = btn.closest('[data-favorito-card]')
+        if (card) card.remove()
+        window.dispatchEvent(new CustomEvent('fav-removed', { detail: { recipeId } }))
+      } else {
+        // Agregar a favoritos
+        await fetch(`/api/users/${userId}/favorites`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipeId })
+        })
+        btn.textContent = '❤️'
+        btn.setAttribute('data-favorito', 'true')
+        window.dispatchEvent(new CustomEvent('fav-added', { detail: { recipeId } }))
+      }
+    })
+  })
+</script>

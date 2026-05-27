@@ -1,0 +1,291 @@
+---
+import ProfileLayout from '@/layouts/ProfileLayout.astro'
+
+const user = (Astro.locals as any).user
+---
+
+<ProfileLayout title="Nueva Receta">
+  <div class="w-full max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+    <h1 class="text-3xl font-bold text-[#6C4637] mb-8">Nueva Receta</h1>
+
+    <form id="recipe-form" method="POST" class="flex flex-col gap-6">
+
+      <!-- TÍTULO -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium text-gray-600">Título</label>
+        <input type="text" name="title" required
+          class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition"
+          placeholder="Ej: Tacos de canasta"
+        />
+      </div>
+
+      <!-- DESCRIPCIÓN -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium text-gray-600">Descripción</label>
+        <textarea name="description" required rows="3"
+          class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition resize-none"
+          placeholder="Describe brevemente tu receta..."
+        ></textarea>
+      </div>
+
+      <!-- CATEGORÍA Y DIFICULTAD -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-600">Categoría</label>
+          <select name="category" required
+            class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition bg-white"
+          >
+            <option value="">Selecciona...</option>
+            <option value="Desayunos">Desayunos</option>
+            <option value="Comidas">Comidas</option>
+            <option value="Cenas">Cenas</option>
+            <option value="Postres">Postres</option>
+            <option value="Bebidas">Bebidas</option>
+            <option value="Snacks">Snacks</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-sm font-medium text-gray-600">Dificultad</label>
+          <select name="difficulty" required
+            class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition bg-white"
+          >
+            <option value="">Selecciona...</option>
+            <option value="easy">Fácil</option>
+            <option value="medium">Media</option>
+            <option value="hard">Difícil</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TIEMPO DE PREPARACIÓN -->
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium text-gray-600">Tiempo de preparación (minutos)</label>
+        <input type="number" name="preparationTime" required min="1"
+          class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition"
+          placeholder="Ej: 30"
+        />
+      </div>
+
+      <!-- INGREDIENTES -->
+      <div class="flex flex-col gap-3">
+        <label class="text-sm font-medium text-gray-600">Ingredientes</label>
+        <div id="ingredients-list" class="flex flex-col gap-2"></div>
+        <button type="button" id="add-ingredient"
+          class="self-start text-sm text-[#6C4637] border border-[#6C4637] px-4 py-2 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+        >
+          + Agregar ingrediente
+        </button>
+      </div>
+
+      <!-- INSTRUCCIONES -->
+      <div class="flex flex-col gap-3">
+        <label class="text-sm font-medium text-gray-600">Instrucciones</label>
+        <div id="instructions-list" class="flex flex-col gap-2"></div>
+        <button type="button" id="add-instruction"
+          class="self-start text-sm text-[#6C4637] border border-[#6C4637] px-4 py-2 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+        >
+          + Agregar paso
+        </button>
+      </div>
+
+      <!-- ES RECETA DE COMUNIDAD -->
+      <div class="flex items-center gap-3">
+        <input type="checkbox" name="isCommunityRecipe" id="isCommunityRecipe"
+          class="w-4 h-4 accent-[#6C4637]"
+        />
+        <label for="isCommunityRecipe" class="text-sm text-gray-600">
+          Compartir como receta de comunidad
+        </label>
+      </div>
+
+      <!-- ERROR -->
+      <p id="error-msg" class="text-red-500 text-sm hidden"></p>
+
+      <!-- SUBMIT -->
+      <button type="submit"
+        class="w-full py-3 bg-[#6C4637] text-white rounded-xl font-semibold hover:bg-[#5a3a2e] transition"
+      >
+        Publicar receta
+      </button>
+
+    </form>
+  </div>
+</ProfileLayout>
+
+<script define:vars={{ userId: user?.userId }}>
+
+  const form = document.getElementById('recipe-form')
+  const errorMsg = document.getElementById('error-msg')
+  const ingredientsList = document.getElementById('ingredients-list')
+  const instructionsList = document.getElementById('instructions-list')
+  const addIngredientBtn = document.getElementById('add-ingredient')
+  const addInstructionBtn = document.getElementById('add-instruction')
+  const submitBtn = form?.querySelector('button[type="submit"]')
+
+  // =========================
+  // INGREDIENTES
+  // =========================
+  function addIngredient() {
+    const div = document.createElement('div')
+    div.className = 'grid grid-cols-3 gap-2 items-center'
+
+    const nameInput = document.createElement('input')
+    nameInput.type = 'text'
+    nameInput.placeholder = 'Nombre'
+    nameInput.setAttribute('data-ingredient', 'name')
+    nameInput.className = 'px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637]'
+
+    const quantityInput = document.createElement('input')
+    quantityInput.type = 'text'
+    quantityInput.placeholder = 'Cantidad'
+    quantityInput.setAttribute('data-ingredient', 'quantity')
+    quantityInput.className = 'px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637]'
+
+    const unitInput = document.createElement('input')
+    unitInput.type = 'text'
+    unitInput.placeholder = 'Unidad'
+    unitInput.setAttribute('data-ingredient', 'unit')
+    unitInput.className = 'flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637]'
+
+    const removeBtn = document.createElement('button')
+    removeBtn.type = 'button'
+    removeBtn.textContent = '✕'
+    removeBtn.className = 'text-red-400 hover:text-red-600 text-lg'
+    removeBtn.addEventListener('click', () => div.remove())
+
+    const wrapper = document.createElement('div')
+    wrapper.className = 'flex gap-2'
+    wrapper.appendChild(unitInput)
+    wrapper.appendChild(removeBtn)
+
+    div.appendChild(nameInput)
+    div.appendChild(quantityInput)
+    div.appendChild(wrapper)
+
+    ingredientsList?.appendChild(div)
+  }
+
+  // =========================
+  // INSTRUCCIONES
+  // =========================
+  function updateStepNumbers() {
+    document.querySelectorAll('[data-step-number]').forEach((el, i) => {
+      el.textContent = `${i + 1}.`
+    })
+  }
+
+  function addInstruction() {
+    const index = instructionsList?.children.length || 0
+
+    const div = document.createElement('div')
+    div.className = 'flex gap-2 items-start'
+
+    const stepNumber = document.createElement('span')
+    stepNumber.setAttribute('data-step-number', '')
+    stepNumber.className = 'mt-2 text-sm font-bold text-[#6C4637] w-6 flex-shrink-0'
+    stepNumber.textContent = `${index + 1}.`
+
+    const textarea = document.createElement('textarea')
+    textarea.placeholder = 'Describe el paso...'
+    textarea.setAttribute('data-instruction', '')
+    textarea.rows = 2
+    textarea.className = 'flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] resize-none'
+
+    const removeBtn = document.createElement('button')
+    removeBtn.type = 'button'
+    removeBtn.textContent = '✕'
+    removeBtn.className = 'mt-2 text-red-400 hover:text-red-600 text-lg'
+    removeBtn.addEventListener('click', () => {
+      div.remove()
+      updateStepNumbers()
+    })
+
+    div.appendChild(stepNumber)
+    div.appendChild(textarea)
+    div.appendChild(removeBtn)
+
+    instructionsList?.appendChild(div)
+  }
+
+  // =========================
+  // SUBMIT
+  // =========================
+  async function handleSubmit(e) {
+    e.preventDefault()
+
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'true')
+      submitBtn.textContent = 'Publicando...'
+    }
+    errorMsg?.classList.add('hidden')
+
+    try {
+      if (!userId) throw new Error('Debes iniciar sesión para publicar recetas')
+
+      const ingredients = Array.from(ingredientsList?.children || []).map(div => ({
+        name:     div.querySelector('[data-ingredient="name"]')?.value?.trim() || '',
+        quantity: div.querySelector('[data-ingredient="quantity"]')?.value?.trim() || '',
+        unit:     div.querySelector('[data-ingredient="unit"]')?.value?.trim() || '',
+      })).filter(i => i.name && i.quantity && i.unit)
+
+      const instructions = Array.from(document.querySelectorAll('[data-instruction]'))
+        .map(el => el.value?.trim())
+        .filter(Boolean)
+
+      const body = {
+        title:            form.querySelector('[name="title"]')?.value?.trim(),
+        description:      form.querySelector('[name="description"]')?.value?.trim(),
+        categories:       [form.querySelector('[name="category"]')?.value],
+        difficulty:       form.querySelector('[name="difficulty"]')?.value,
+        preparationTime:  Number(form.querySelector('[name="preparationTime"]')?.value),
+        isCommunityRecipe: form.querySelector('[name="isCommunityRecipe"]')?.checked || false,
+        ingredients,
+        instructions,
+        authorId: userId,
+      }
+
+      if (!body.title || body.title.length < 3) throw new Error('El título debe tener al menos 3 caracteres')
+      if (!body.description || body.description.length < 10) throw new Error('La descripción debe tener al menos 10 caracteres')
+      if (!body.categories[0]) throw new Error('Selecciona una categoría')
+      if (!body.difficulty) throw new Error('Selecciona una dificultad')
+      if (body.ingredients.length === 0) throw new Error('Agrega al menos un ingrediente')
+      if (body.instructions.length === 0) throw new Error('Agrega al menos una instrucción')
+
+      const res = await fetch('/api/recipes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Error al crear la receta')
+
+      window.location.href = '/profile/recipes'
+
+    } catch (error) {
+      if (errorMsg) {
+        errorMsg.textContent = error?.message || 'Error inesperado'
+        errorMsg.classList.remove('hidden')
+        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled')
+        submitBtn.textContent = 'Publicar receta'
+      }
+    }
+  }
+
+  // =========================
+  // INICIALIZAR
+  // =========================
+  addIngredientBtn?.addEventListener('click', addIngredient)
+  addInstructionBtn?.addEventListener('click', addInstruction)
+  form?.addEventListener('submit', handleSubmit)
+
+  // Campos iniciales
+  addIngredient()
+  addInstruction()
+
+</script>

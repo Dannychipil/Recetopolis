@@ -1,0 +1,174 @@
+---
+import Card from '@/components/Card.astro'
+import ProfileLayout from '@/layouts/ProfileLayout.astro'
+
+interface Recipe {
+  _id: string
+  title: string
+  description: string
+  preparationTime: number
+  averageRating: number
+  imagesUrl?: string[]
+}
+
+const user = (Astro.locals as any).user
+const cookie = Astro.request.headers.get('cookie') || ''
+
+const res = await fetch(`${Astro.url.origin}/api/recipes?authorId=${user?.userId}`)
+const recipes = (await res.json()) as Recipe[]
+
+const resfav = await fetch(`${Astro.url.origin}/api/users/${user?.userId}/favorites`, {
+  headers: { cookie }
+})
+
+const favoritesData = (await resfav.json()) as Recipe[]
+const favoriteIds = Array.isArray(favoritesData) 
+  ? favoritesData.map(r => r._id.toString()) 
+  : []
+---
+
+<ProfileLayout title="Mi Perfil">
+    <!-- HEADER PERFIL -->
+    <section class="bg-white rounded-3xl shadow-md p-8 mb-10 border border-[#E7E2DA]">
+
+        <div class="flex flex-col md:flex-row items-center gap-8">
+
+            <!-- FOTO -->
+            <div class="w-36 h-36 rounded-full overflow-hidden border-4 border-[#6C4637] shadow-lg shrink-0">
+                <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400"
+                    alt="Foto de perfil"
+                    class="w-full h-full object-cover"
+                />
+            </div>
+
+            <!-- INFO -->
+            <div class="flex-1 text-center md:text-left">
+
+                <h1 class="text-4xl font-bold text-[#6C4637] mb-2">
+                    Nancy Ban
+                </h1>
+
+                <p class="text-gray-600 mb-4 max-w-2xl">
+                    Amante de la cocina y de descubrir nuevas recetas 🍳
+                    Compartiendo sabores, postres y comida casera.
+                </p>
+
+                <!-- STATS -->
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+
+                    <div class="bg-[#F4F3EF] px-5 py-3 rounded-2xl">
+                        <p class="text-2xl font-bold text-[#6C4637]">24</p>
+                        <p class="text-sm text-gray-600">Recetas</p>
+                    </div>
+
+                    <div class="bg-[#F4F3EF] px-5 py-3 rounded-2xl">
+                        <p class="text-2xl font-bold text-[#6C4637]">1.2k</p>
+                        <p class="text-sm text-gray-600">Seguidores</p>
+                    </div>
+
+                    <div class="bg-[#F4F3EF] px-5 py-3 rounded-2xl">
+                        <p class="text-2xl font-bold text-[#6C4637]">182</p>
+                        <p class="text-sm text-gray-600">Likes</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- BOTON -->
+            <button
+                class="bg-[#6C4637] text-white px-6 py-3 rounded-2xl hover:scale-105 transition shadow-md"
+            >
+                Editar perfil
+            </button>
+
+        </div>
+    </section>
+
+    <!-- MIS RECETAS -->
+    <section class="mb-14">
+
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold text-[#6C4637]">
+                Mis recetas
+            </h2>
+
+            <a href="/profile/recipes/create">
+                <button
+                    class="bg-[#6C4637] text-white px-5 py-2 rounded-xl hover:scale-105 transition"
+                >
+                    + Nueva receta
+                </button>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            {recipes.map((recipe) => (
+                <div class="transition-transform duration-200 hover:-translate-y-1">
+                    <Card
+                    id={recipe._id}
+                    title={recipe.title}
+                    description={recipe.description}
+                    prepTime={recipe.preparationTime}
+                    rating={recipe.averageRating}
+                    image={recipe.imagesUrl?.[0]}
+                    favorito={favoriteIds.includes(recipe._id.toString())}
+                    userId={user?.userId}
+                    />
+                </div>
+            ))}
+
+        </div>
+    </section>
+
+    <!-- FAVORITOS -->
+   <section id="favoritos-section">
+        <h2 class="text-3xl font-bold text-[#6C4637] mb-6">Favoritos</h2>
+
+        {favoritesData.length === 0 ? (
+            <div class="text-center py-10 text-gray-400">
+            <p class="text-lg">Aún no tienes recetas favoritas.</p>
+            <a href="/recipes" class="text-[#6C4637] font-medium hover:underline mt-2 inline-block">Explorar recetas</a>
+            </div>
+        ) : (
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {favoritesData.map((recipe: Recipe) => (
+                <div data-favorito-card class="transition-transform duration-200 hover:-translate-y-1">
+                <Card
+                    id={recipe._id}
+                    title={recipe.title}
+                    description={recipe.description}
+                    prepTime={recipe.preparationTime}
+                    rating={recipe.averageRating}
+                    image={recipe.imagesUrl?.[0]}
+                    favorito={true}
+                    userId={user?.userId}
+                />
+                </div>
+            ))}
+            </div>
+        )}
+    </section>
+</ProfileLayout>
+
+<script>
+  window.addEventListener('fav-added', async () => {
+    // Recargar solo la sección de favoritos
+    const res = await fetch(window.location.href)
+    const html = await res.text()
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(html, 'text/html')
+    const newSection = doc.querySelector('#favoritos-section')
+    const currentSection = document.querySelector('#favoritos-section')
+    if (newSection && currentSection) {
+      currentSection.innerHTML = newSection.innerHTML
+    }
+  })
+
+    window.addEventListener('fav-removed', (e) => {
+        const { recipeId } = (e as any).detail
+    const card = document.querySelector(`[data-favorito-card] [data-recipe-id="${recipeId}"]`)
+    card?.closest('[data-favorito-card]')?.remove()
+  })
+</script>

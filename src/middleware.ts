@@ -1,40 +1,50 @@
-import { defineMiddleware } from 'astro:middleware'
-import { verifyJwt } from '@/lib/jwt'
+import { defineMiddleware } from "astro:middleware";
+import { verifyJwt } from "@/lib/jwt";
 
 const protectedRoutes = [
-    // Recetas
-    { method: 'POST', path: '/api/recipes' },
-    { method: 'PUT', path: '/api/recipes' },
-    { method: 'DELETE', path: '/api/recipes' },
-    // Usuarios
-    { method: 'PUT', path: '/api/users' },
-    //Favoritos
-    { method: 'POST', path: '/api/users' },     // POST /api/user/[id]/favorites
-    { method: 'DELETE', path: '/api/users' },   // DELETE /api/user/[id]/favorites
-    {method: 'GET', path: '/api/users' }        // GET /api/user/[id]/favorites/[recipeId]
-]
+  // Recetas
+  { method: "POST", path: "/api/recipes" },
+  { method: "PUT", path: "/api/recipes" },
+  { method: "DELETE", path: "/api/recipes" },
+  // Usuarios
+  { method: "PUT", path: "/api/users" },
+  // Favoritos
+  { method: "POST", path: "/api/users" },
+  { method: "DELETE", path: "/api/users" },
+  { method: "GET", path: "/api/users" },
+];
 
-export const onRequest = defineMiddleware(async ({ request, cookies }, next) => {
-    const { pathname } = new URL(request.url)
-    const method = request.method
+const protectedPages = ["/profile"];
 
-    // Verificar si la ruta y método requieren autenticación
-    const requiresAuth = protectedRoutes.some(route => {
-        return route.method === method && pathname.startsWith(route.path)
-    })
+export const onRequest = defineMiddleware(
+  async ({ request, cookies, locals, redirect }, next) => {
+    const { pathname } = new URL(request.url);
+    const method = request.method;
 
-    if (requiresAuth) {
-        const token = cookies.get('token')?.value
+    const localsAny = locals as any;
 
-        if (!token) {
-            return new Response(JSON.stringify({ error: 'No autorizado' }), { status: 401 })
-        }
+    // Leer token una sola vez
+    const token = cookies.get("token")?.value;
+    localsAny.user = token ? (verifyJwt(token) as any) : null;
 
-        const userData = verifyJwt(token)
-        if (!userData) {
-            return new Response(JSON.stringify({ error: 'Token inválido o expirado' }), { status: 401 })
-        }
+    // Proteger páginas — redirige al login si no está autenticado
+    const isProtectedPage = protectedPages.some((page) =>
+      pathname.startsWith(page),
+    );
+    if (isProtectedPage && !localsAny.user) {
+      return redirect("/login");
     }
 
-    return next()
-})
+    // Proteger API routes — regresa 401 si no está autenticado
+    const requiresAuth = protectedRoutes.some(
+      (route) => route.method === method && pathname.startsWith(route.path),
+    );
+    if (requiresAuth && !localsAny.user) {
+      return new Response(JSON.stringify({ error: "No autorizado" }), {
+        status: 401,
+      });
+    }
+
+    return next();
+  },
+);

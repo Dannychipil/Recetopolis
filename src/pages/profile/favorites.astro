@@ -1,0 +1,60 @@
+---
+import ProfileLayout from '@/layouts/ProfileLayout.astro'
+import Footer from '@/components/Footer.astro'
+import Card from '@/components/Card.astro'
+interface FavoriteRecipe {
+  _id: string
+  title: string
+  description: string
+  preparationTime: number
+  averageRating: number
+  imagesUrl?: string[]
+}
+
+const user = (Astro.locals as any).user
+const cookie = Astro.request.headers.get('cookie') || ''
+
+const res = await fetch(`${Astro.url.origin}/api/users/${user?.userId}/favorites`, {
+  headers: {
+    cookie  // 👈 pasa la cookie del request original
+  }
+})
+const data = await res.json()
+const recipes = Array.isArray(data) ? data : []
+---
+
+<ProfileLayout title="Mis Favoritos">
+    <div class="max-w-7xl mx-auto mb-10 border-b border-[#6C4637]/10 pb-6 flex items-center gap-4">
+        <div>
+            <h1 class="text-4xl font-bold text-[#6C4637]">Mis Recetas Favoritas</h1>
+            <p class="text-[#6D7A84] mt-1 text-sm">Las joyas culinarias que has guardado en tu recetario.</p>
+        </div>
+    </div>
+
+    <section class="max-w-7xl mx-auto mb-14">
+        {recipes.length === 0 ? (
+            <div class="text-center py-20 text-gray-400">
+                <p class="text-lg">Aún no tienes recetas favoritas.</p>
+                <a href="/recipes" class="text-[#6C4637] font-medium hover:underline mt-2 inline-block">Explorar recetas</a>
+            </div>
+        ) : (
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {recipes.map((recipe) => (
+                    <div class="transition-transform duration-200 hover:-translate-y-1">
+                        <Card
+                            id={recipe._id}
+                            title={recipe.title}
+                            description={recipe.description}
+                            prepTime={recipe.preparationTime}
+                            rating={recipe.averageRating}
+                            image={recipe.imagesUrl?.[0]}
+                            favorito={true}
+                        />
+                    </div>
+                ))}
+            </div>
+        )}
+    </section>
+
+    <Footer />
+</ProfileLayout>
