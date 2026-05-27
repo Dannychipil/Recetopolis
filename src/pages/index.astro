@@ -65,7 +65,7 @@ const recetasPuntuacion = Array.from({ length: 6 });
 
                     {
                         recetasPopulares.map(() => (
-                            <Card />
+                            <Card favorito={false} />
                         ))
                     }
 
@@ -108,7 +108,7 @@ const recetasPuntuacion = Array.from({ length: 6 });
 
                     {
                         recetasPuntuacion.map(() => (
-                            <Card />
+                            <Card favorito={true} />
                         ))
                     }
 
