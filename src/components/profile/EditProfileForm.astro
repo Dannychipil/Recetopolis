@@ -1,0 +1,147 @@
+---
+const {
+  avatarUrl = '/default-avatar.png',
+  username = 'Usuario',
+  bio = 'Sin biografía',
+  userId = ''
+} = Astro.props
+---
+
+<section class="bg-white rounded-3xl shadow-md p-8 border border-[#E7E2DA]">
+
+  <h2 class="text-2xl font-bold text-[#6C4637] mb-8">
+    Editar Información Personal
+  </h2>
+
+  <p id="success-msg" class="hidden bg-green-50 text-green-600 text-sm px-4 py-3 rounded-lg mb-4">
+    Perfil actualizado correctamente
+  </p>
+
+  <p id="error-msg" class="hidden bg-red-50 text-red-600 text-sm px-4 py-3 rounded-lg mb-4"></p>
+
+  <form id="edit-profile-form" class="space-y-6">
+
+    <!-- Avatar preview -->
+    <div class="flex flex-col items-center gap-4">
+      <img
+        id="avatar-preview"
+        src={avatarUrl}
+        alt="Avatar"
+        class="w-28 h-28 rounded-full object-cover border-4 border-[#E7E2DA]"
+      />
+      <input
+        type="file"
+        accept="image/*"
+        name="avatar"
+        id="avatar-input"
+        class="block w-full text-sm text-gray-500
+          file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0
+          file:text-sm file:font-semibold file:bg-[#6C4637] file:text-white
+          hover:file:bg-[#5a3729] transition cursor-pointer"
+      />
+    </div>
+
+    <!-- Username -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Nombre de Usuario
+      </label>
+      <input
+        type="text"
+        name="username"
+        value={username}
+        class="block w-full rounded-xl border border-gray-300 px-4 py-3
+          focus:outline-none focus:ring-2 focus:ring-[#6C4637] focus:border-[#6C4637]"
+      />
+    </div>
+
+    <!-- Bio -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Biografía
+      </label>
+      <textarea
+        name="bio"
+        rows="4"
+        placeholder="Cuéntanos sobre ti..."
+        class="block w-full rounded-xl border border-gray-300 px-4 py-3
+          focus:outline-none focus:ring-2 focus:ring-[#6C4637] focus:border-[#6C4637] resize-none"
+      >{bio}</textarea>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      id="submit-btn"
+      class="bg-[#6C4637] text-white px-6 py-3 rounded-2xl hover:scale-105 transition shadow-md"
+    >
+      Guardar Cambios
+    </button>
+
+  </form>
+
+</section>
+
+<script define:vars={{ userId}}>
+  // Preview de avatar antes de subir
+  document.getElementById('avatar-input')?.addEventListener('change', (e) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        const preview = document.getElementById('avatar-preview')
+        if (preview) preview.src = ev.target?.result
+      }
+      reader.readAsDataURL(file)
+    }
+  })
+
+  // Submit
+  document.getElementById('edit-profile-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const form = e.target
+    const submitBtn  = document.getElementById('submit-btn')
+    const successMsg = document.getElementById('success-msg')
+    const errorMsg   = document.getElementById('error-msg')
+
+    successMsg?.classList.add('hidden')
+    errorMsg?.classList.add('hidden')
+
+    if (submitBtn) {
+      submitBtn.setAttribute('disabled', 'true')
+      submitBtn.textContent = 'Guardando...'
+    }
+
+    try {
+      const username = form.querySelector('[name="username"]')?.value?.trim()
+      const bio      = form.querySelector('[name="bio"]')?.value?.trim()
+
+      const res = await fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, bio })
+      })
+
+      if (res.ok) {
+        successMsg?.classList.remove('hidden')
+        successMsg?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      } else {
+        const data = await res.json()
+        if (errorMsg) {
+          errorMsg.textContent = data.error || 'Error al actualizar perfil'
+          errorMsg.classList.remove('hidden')
+        }
+      }
+    } catch (error) {
+      if (errorMsg) {
+        errorMsg.textContent = 'Error inesperado'
+        errorMsg.classList.remove('hidden')
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled')
+        submitBtn.textContent = 'Guardar Cambios'
+      }
+    }
+  })
+</script>

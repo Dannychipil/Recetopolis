@@ -1,0 +1,41 @@
+---
+import ProfileLayout from '@/layouts/ProfileLayout.astro'
+import EditProfileForm from '@/components/profile/EditProfileForm.astro'
+
+interface User {
+  userId: string
+  username: string
+  email: string
+  avatarUrl?: string
+  bio?: string
+}
+
+const user = (Astro.locals as any).user as User
+const cookie = Astro.request.headers.get('cookie') || ''
+const res = await fetch(`${Astro.url.origin}/api/users/${user?.userId}`, {
+  headers: {
+    cookie  // 👈 pasa la cookie del request original
+  }
+})
+const data = await res.json()
+const userData = data && data._id ? data : null
+
+---
+
+<ProfileLayout title="Editar Perfil">
+    
+    {userData ? (
+        <EditProfileForm
+            username={userData.username}
+            bio={userData.bio}
+            avatarUrl={userData.avatarUrl}
+            userId={userData._id}
+        />
+    ) : (
+        <div class="text-center py-20 text-gray-400">
+            <p class="text-lg">No se pudo cargar tu información de perfil.</p>
+            <a href="/profile" class="text-[#6C4637] font-medium hover:underline mt-2 inline-block">Volver a mi perfil</a>
+        </div>
+    )}
+
+</ProfileLayout>
