@@ -129,8 +129,8 @@ const recetasPuntuacion = Array.from({ length: 6 });
     <Footer />
 </Layout>
 
-<script>
-    function scrollCarousel(id, amount) {
+<script lang="ts">
+    function scrollCarousel(id: string, amount: number) {
         const container = document.getElementById(id);
 
         container.scrollBy({
