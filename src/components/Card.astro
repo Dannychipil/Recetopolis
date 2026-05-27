@@ -1,19 +1,48 @@
+---
+const { favorito = false } = Astro.props;
+---
+
 <!-- CARD -->
 <div class="min-w-[260px] bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition hover:-translate-y-1">
 
-    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" class="w-full h-44 object-cover"/>
+    <!-- CONTENEDOR IMAGEN -->
+    <div class="relative">
+
+        <img
+            src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c"
+            class="w-full h-44 object-cover"
+        />
+
+        <!-- FAVORITOS -->
+        <button
+            class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm w-10 h-10 rounded-full shadow-md flex items-center justify-center hover:scale-110 transition"
+        >
+            {favorito ? '❤️' : '🤍'}
+        </button>
+
+    </div>
 
     <div class="p-4">
 
         <div class="flex items-center justify-between mb-2">
-            <h3 class="text-lg font-bold text-[#6C4637]">Ensalada Fresca</h3>
-            <span class="text-yellow-500">★ 4.9</span>
+            <h3 class="text-lg font-bold text-[#6C4637]">
+                Ensalada Fresca
+            </h3>
+
+            <span class="text-yellow-500">
+                ★ 4.9
+            </span>
         </div>
 
-        <p class="text-sm text-gray-600 mb-4">Una receta saludable y rápida.</p>
+        <p class="text-sm text-gray-600 mb-4">
+            Una receta saludable y rápida.
+        </p>
 
         <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-500">⏱ 15 min</span>
+            <span class="text-sm text-gray-500">
+                ⏱ 15 min
+            </span>
         </div>
+
     </div>
 </div>
