@@ -1,0 +1,156 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+    <Navbar />
+
+    <main class="ml-64 bg-[#F4F3EF] min-h-screen p-8">
+
+        <!-- TITULO -->
+        <div class="mb-10">
+            <h1 class="text-5xl font-bold text-[#6C4637] mb-2">
+                Nueva receta
+            </h1>
+
+            <p class="text-gray-600">
+                Comparte una nueva receta con la comunidad 🍳
+            </p>
+        </div>
+
+        <!-- FORMULARIO -->
+        <section class="bg-white rounded-3xl shadow-md p-8 border border-[#E7E2DA] max-w-5xl">
+
+            <form class="space-y-8">
+
+                <!-- NOMBRE -->
+                <div>
+                    <label class="block text-[#6C4637] font-semibold mb-2">
+                        Nombre de la receta
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Ej. Pasta Alfredo"
+                        class="w-full rounded-2xl border border-[#D9D0C7] px-5 py-4 outline-none focus:ring-2 focus:ring-[#6C4637]"
+                    />
+                </div>
+
+                <!-- DESCRIPCION -->
+                <div>
+                    <label class="block text-[#6C4637] font-semibold mb-2">
+                        Descripción
+                    </label>
+
+                    <textarea
+                        rows="4"
+                        placeholder="Describe tu receta..."
+                        class="w-full rounded-2xl border border-[#D9D0C7] px-5 py-4 outline-none resize-none focus:ring-2 focus:ring-[#6C4637]"
+                    ></textarea>
+                </div>
+
+                <!-- IMAGEN -->
+                <div>
+                    <label class="block text-[#6C4637] font-semibold mb-2">
+                        Imagen de la receta
+                    </label>
+
+                    <div class="border-2 border-dashed border-[#D9D0C7] rounded-2xl p-10 text-center bg-[#F9F7F4]">
+
+                        <p class="text-gray-600 mb-4">
+                            Arrastra una imagen o selecciónala
+                        </p>
+
+                        <input
+                            type="file"
+                            class="block mx-auto text-sm text-gray-600"
+                        />
+
+                    </div>
+                </div>
+
+                <!-- GRID -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- TIEMPO -->
+                    <div>
+                        <label class="block text-[#6C4637] font-semibold mb-2">
+                            Tiempo de preparación
+                        </label>
+
+                        <input
+                            type="text"
+                            placeholder="Ej. 30 min"
+                            class="w-full rounded-2xl border border-[#D9D0C7] px-5 py-4 outline-none focus:ring-2 focus:ring-[#6C4637]"
+                        />
+                    </div>
+
+                    <!-- PORCIONES -->
+                    <div>
+                        <label class="block text-[#6C4637] font-semibold mb-2">
+                            Porciones
+                        </label>
+
+                        <input
+                            type="number"
+                            placeholder="Ej. 4"
+                            class="w-full rounded-2xl border border-[#D9D0C7] px-5 py-4 outline-none focus:ring-2 focus:ring-[#6C4637]"
+                        />
+                    </div>
+
+                </div>
+
+                <!-- INGREDIENTES -->
+                <div>
+                    <label class="block text-[#6C4637] font-semibold mb-2">
+                        Ingredientes
+                    </label>
+
+                    <textarea
+                        rows="6"
+                        placeholder="- 2 tomates&#10;- 1 cebolla&#10;- 200g de pasta"
+                        class="w-full rounded-2xl border border-[#D9D0C7] px-5 py-4 outline-none resize-none focus:ring-2 focus:ring-[#6C4637]"
+                    ></textarea>
+                </div>
+
+                <!-- PASOS -->
+                <div>
+                    <label class="block text-[#6C4637] font-semibold mb-2">
+                        Preparación
+                    </label>
+
+                    <textarea
+                        rows="8"
+                        placeholder="Paso 1: ...&#10;Paso 2: ..."
+                        class="w-full rounded-2xl border border-[#D9D0C7] px-5 py-4 outline-none resize-none focus:ring-2 focus:ring-[#6C4637]"
+                    ></textarea>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
+
+                    <button
+                        type="submit"
+                        class="bg-[#6C4637] text-white px-8 py-4 rounded-2xl hover:scale-105 transition shadow-md"
+                    >
+                        Publicar receta
+                    </button>
+
+                    <button
+                        type="button"
+                        class="bg-white border border-[#D9D0C7] text-[#6C4637] px-8 py-4 rounded-2xl hover:bg-[#F4F3EF] transition"
+                    >
+                        Guardar borrador
+                    </button>
+
+                </div>
+
+            </form>
+        </section>
+
+    </main>
+
+    <Footer />
+</Layout>
