@@ -101,8 +101,8 @@ docker-compose.yml
  
 ```bash
 # 1. Clone the repo
-git clone https://github.com/usuario/recetopolis.git
-cd recetopolis
+git clone https://github.com/Dannychipil/Recetopolis.git
+cd Recetopolis
  
 # 2. Install dependencies
 pnpm install
