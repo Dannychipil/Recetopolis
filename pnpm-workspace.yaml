@@ -3,3 +3,4 @@ allowBuilds:
   sharp: true
 minimumReleaseAgeExclude:
   - astro@6.3.7
+  - astro@6.4.6
