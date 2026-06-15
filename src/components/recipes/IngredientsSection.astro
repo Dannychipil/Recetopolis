@@ -1,0 +1,32 @@
+---
+interface Ingredient {
+  quantity: string;
+  unit: string;
+  name: string;
+}
+
+const { ingredients } = Astro.props as { ingredients: Ingredient[] };
+---
+
+<section
+  class="bg-white p-6 rounded-3xl border border-[#6C4637]/10 shadow-sm h-fit"
+>
+  <h2 class="text-xl font-bold text-[#6C4637] mb-4 flex items-center gap-2">
+    <i class="fi fi-rr-list-check flex items-center"></i>
+    Ingredientes
+  </h2>
+
+  <ul class="flex flex-col gap-3">
+    {
+      ingredients.map((ingredient) => (
+        <li class="text-sm text-[#6C4637]/90 flex items-start gap-2">
+          <span class="text-[#A3624C] mt-0.5">•</span>
+
+          <span>
+            {ingredient.quantity} {ingredient.unit} de {ingredient.name}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

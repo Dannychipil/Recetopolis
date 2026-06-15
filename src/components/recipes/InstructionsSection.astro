@@ -1,0 +1,24 @@
+---
+const { instructions } = Astro.props as { instructions: string[] };
+---
+
+<section class="bg-white p-6 rounded-3xl border border-[#6C4637]/10 shadow-sm">
+  <h2 class="text-xl font-bold text-[#6C4637] mb-4 flex items-center gap-2">
+    <i class="fi fi-rr-pot flex items-center"></i>
+    Preparación
+  </h2>
+
+  <ol class="flex flex-col gap-6">
+    {
+      instructions.map((step, index) => (
+        <li class="flex gap-4">
+          <span class="shrink-0 w-7 h-7 rounded-full bg-[#A3624C] text-white flex items-center justify-center font-bold text-sm">
+            {index + 1}
+          </span>
+
+          <p class="text-sm text-[#6C4637]/90 leading-relaxed pt-0.5">{step}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

@@ -1,0 +1,67 @@
+---
+const { recipeId, userId } = Astro.props;
+---
+
+<form id="review-form" class="flex flex-col gap-4 mt-8">
+  <h3 class="font-semibold text-[#6C4637]">Escribe una reseña</h3>
+
+  <textarea
+    name="comment"
+    rows="4"
+    placeholder="¿Qué te pareció la receta?"
+    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#6C4637] resize-none"
+  ></textarea>
+
+  <div class="flex justify-between items-center">
+    <select
+      name="rating"
+      class="px-4 py-2 border border-gray-200 rounded-xl bg-white"
+    >
+      <option value="5">★★★★★ (5)</option>
+      <option value="4">★★★★☆ (4)</option>
+      <option value="3">★★★☆☆ (3)</option>
+      <option value="2">★★☆☆☆ (2)</option>
+      <option value="1">★☆☆☆☆ (1)</option>
+    </select>
+
+    <button
+      type="submit"
+      class="bg-[#6C4637] text-white px-6 py-3 rounded-xl hover:bg-[#5A3A2E] transition"
+    >
+      Publicar reseña
+    </button>
+  </div>
+</form>
+
+<script define:vars={{ recipeId, userId }}>
+  document
+    .getElementById("review-form")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+
+      const comment = form.querySelector('[name="comment"]')?.value?.trim();
+
+      const rating = Number(form.querySelector('[name="rating"]')?.value);
+
+      if (!comment) return;
+
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          recipeId,
+          userId,
+          rating,
+          comment,
+        }),
+      });
+
+      if (response.ok) {
+        location.reload();
+      }
+    });
+</script>

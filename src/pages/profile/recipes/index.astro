@@ -1,65 +1,90 @@
 ---
-import ProfileLayout from '@/layouts/ProfileLayout.astro'
-import Card from '@/components/Card.astro'
+import ProfileLayout from "@/layouts/ProfileLayout.astro";
+import Card from "@/components/profile/CardProfile.astro";
 
-const user = (Astro.locals as any).user
+const user = (Astro.locals as any).user;
 
 type Recipe = {
-  _id: string
-  title: string
-  description: string
-  preparationTime: number
-  averageRating: number
-  imagesUrl?: string[]
-}
+  _id: string;
+  title: string;
+  description: string;
+  preparationTime: number;
+  averageRating: number;
+  imagesUrl?: string[];
+};
 
-const res = await fetch(`${Astro.url.origin}/api/recipes?authorId=${user?.userId}`)
-const recipes = (await res.json()) as Recipe[]
+const res = await fetch(
+  `${Astro.url.origin}/api/recipes?authorId=${user?.userId}`,
+);
+const recipes = (await res.json()) as Recipe[];
 ---
 
 <ProfileLayout title="Mis Receta">
-    <div class="max-w-7xl mx-auto mb-10 border-b border-[#6C4637]/10 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div class="flex items-center gap-4">
-            <div>
-                <h1 class="text-4xl font-bold text-[#6C4637]">Mis Recetas</h1>
-                <p class="text-[#6D7A84] mt-1 text-sm">Administra, edita y comparte tus propias creaciones culinarias.</p>
-            </div>
-        </div>
-
-        <button class="flex items-center justify-center gap-2 bg-[#A3624C] hover:bg-[#6C4637] text-[#F4F3EF] px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 self-start sm:self-center group">
-            <i class="fi fi-rr-plus text-lg flex items-center transition-transform duration-200 group-hover:rotate-90"></i>
-            <a href="/profile/recipes/create">
-                <span>Agregar Nueva Receta</span>
-            </a>
-        </button>
+  <div
+    class="max-w-7xl mx-auto mb-10 border-b border-[#6C4637]/10 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+  >
+    <div class="flex items-center gap-4">
+      <div>
+        <h1 class="text-4xl font-bold text-[#6C4637]">Mis Recetas</h1>
+        <p class="text-[#6D7A84] mt-1 text-sm">
+          Administra, edita y comparte tus propias creaciones culinarias.
+        </p>
+      </div>
     </div>
 
-    <section class="max-w-7xl mx-auto mb-14">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                
-            <button class="flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed border-[#6C4637]/30 hover:border-[#A3624C] bg-white/50 hover:bg-white transition-all duration-300 group">
-                <div class="w-16 h-16 rounded-full bg-[#A3624C]/10 flex items-center justify-center mb-4 group-hover:bg-[#A3624C] transition-colors duration-300">
-                    <a href="/profile/recipes/create">
-                        <i class="fi fi-rr-plus text-2xl text-[#A3624C] group-hover:text-[#F4F3EF] flex items-center"></i>
-                    </a>
-                </div>
-                <span class="font-bold text-[#6C4637] group-hover:text-[#A3624C] transition-colors">Crear Receta desde cero</span>
-                <p class="text-xs text-[#6D7A84] text-center mt-2 px-4">Sube tus fotos, escribe los ingredientes y comparte tu sazón.</p>
-            </button>
+    <button
+      class="flex items-center justify-center gap-2 bg-[#A3624C] hover:bg-[#6C4637] text-[#F4F3EF] px-5 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 self-start sm:self-center group"
+    >
+      <i
+        class="fi fi-rr-plus text-lg flex items-center transition-transform duration-200 group-hover:rotate-90"
+      ></i>
+      <a href="/profile/recipes/create">
+        <span>Agregar Nueva Receta</span>
+      </a>
+    </button>
+  </div>
 
-            {recipes.map((recipe) => (
-                <div class="transition-transform duration-200 hover:-translate-y-1">
-                    <Card
-                    id={recipe._id}
-                    title={recipe.title}
-                    description={recipe.description}
-                    prepTime={recipe.preparationTime}
-                    rating={recipe.averageRating}
-                    image={recipe.imagesUrl?.[0]}
-                    />
-                </div>
-            ))}
-
+  <section class="max-w-7xl mx-auto mb-14">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+    >
+      <button
+        class="flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed border-[#6C4637]/30 hover:border-[#A3624C] bg-white/50 hover:bg-white transition-all duration-300 group"
+      >
+        <div
+          class="w-16 h-16 rounded-full bg-[#A3624C]/10 flex items-center justify-center mb-4 group-hover:bg-[#A3624C] transition-colors duration-300"
+        >
+          <a href="/profile/recipes/create">
+            <i
+              class="fi fi-rr-plus text-2xl text-[#A3624C] group-hover:text-[#F4F3EF] flex items-center"
+            ></i>
+          </a>
         </div>
-    </section>
+        <span
+          class="font-bold text-[#6C4637] group-hover:text-[#A3624C] transition-colors"
+          >Crear Receta desde cero</span
+        >
+        <p class="text-xs text-[#6D7A84] text-center mt-2 px-4">
+          Sube tus fotos, escribe los ingredientes y comparte tu sazón.
+        </p>
+      </button>
+
+      {
+        recipes.map((recipe) => (
+          <div class="transition-transform duration-200 hover:-translate-y-1">
+            <Card
+              id={recipe._id}
+              title={recipe.title}
+              description={recipe.description}
+              prepTime={recipe.preparationTime}
+              rating={recipe.averageRating}
+              image={recipe.imagesUrl?.[0]}
+              recipe={recipe}
+              editable={true}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </section>
 </ProfileLayout>

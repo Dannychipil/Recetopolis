@@ -1,0 +1,19 @@
+---
+import ProfileLayout from "@/layouts/ProfileLayout.astro";
+import RecipeForm from "@/components/recipesForms/RecipeForm.astro";
+
+const { id } = Astro.params;
+const user = (Astro.locals as any).user;
+
+const res = await fetch(`${Astro.url.origin}/api/recipes/${id}`);
+
+if (!res.ok) {
+  return Astro.redirect("/profile/recipes");
+}
+
+const recipe = await res.json();
+---
+
+<ProfileLayout title="Editar receta">
+  <RecipeForm recipe={recipe} mode="edit" userId={user?.userId} />
+</ProfileLayout>

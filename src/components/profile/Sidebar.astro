@@ -1,49 +1,72 @@
-<div class="fixed top-0 left-0 bottom-0 w-64 bg-[#F4F3EF] text-slate-800 p-4 flex-col justify-between border-r border-[#6C4637]">
-
-    <div class="flex flex-col gap-8">
-
-        <div class="flex justify-center gap-3 py-3 border-b border-[#6C4637]">
-            <a href="/"><img
-                src="/logo.ico"
-                alt="Logo de Recetopolis"
-                class="h-auto w-auto object-contain"
-            /></a>
-        </div>
-
-        <nav class="flex flex-col gap-2">
-            <a href="/profile" class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
-                <i class="fi fi-rs-mouse-field group-hover:hidden"></i>
-                <i class="fi fi-ss-mouse-field group hidden group-hover:block"></i>
-
-                <span>Mi Perfil</span>
-            </a>
-
-            <a href="/profile/favorites" class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
-                <i class="fi fi-rr-heart group-hover:hidden"></i>
-                <i class="fi fi-sr-heart group hidden group-hover:block"></i>
-                
-                <span>Favoritos</span>
-            </a>
-
-            <a href="/profile/recipes" class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
-                <i class="fi fi-rr-book-alt group-hover:hidden"></i>
-                <i class="fi fi-sr-book-alt group hidden group-hover:block"></i>
-                <span>Mis Recetas</span> </a>
-        </nav>
+<div
+  class="fixed top-0 left-0 bottom-0 w-64 bg-[#F4F3EF] text-slate-800 p-4 flex-col justify-between border-r border-[#6C4637]"
+>
+  <div class="flex flex-col gap-8">
+    <div class="flex justify-center gap-3 py-3 border-b border-[#6C4637]">
+      <a href="/"
+        ><img
+          src="/logo.ico"
+          alt="Logo de Recetopolis"
+          class="h-auto w-auto object-contain"
+        /></a
+      >
     </div>
 
-    <div class="border-t border-[#6C4637] pt-4 flex flex-col">
-        <button id="logout-btn" class=" group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition">
-            <i class="fi fi-rs-leave group-hover:hidden"></i>
-            <i class="fi fi-ss-leave group hidden group-hover:block"></i>
-            <span>Cerrar Sesión</span>
-        </button>
-    </div>
+    <nav class="flex flex-col gap-2">
+      <a
+        href="/profile"
+        class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+      >
+        <i class="fi fi-rs-mouse-field group-hover:hidden"></i>
+        <i class="fi fi-ss-mouse-field group hidden group-hover:block"></i>
+
+        <span>Mi Perfil</span>
+      </a>
+
+      <a
+        href="/profile/favorites"
+        class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+      >
+        <i class="fi fi-rr-heart group-hover:hidden"></i>
+        <i class="fi fi-sr-heart group hidden group-hover:block"></i>
+
+        <span>Favoritos</span>
+      </a>
+
+      <a
+        href="/profile/recipes"
+        class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+      >
+        <i class="fi fi-rr-book-alt group-hover:hidden"></i>
+        <i class="fi fi-sr-book-alt group hidden group-hover:block"></i>
+        <span>Mis Recetas</span>
+      </a>
+      <a
+        href="/categorias"
+        class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+      >
+        <i class="fi fi-rr-book-alt group-hover:hidden"></i>
+        <i class="fi fi-sr-book-alt group hidden group-hover:block"></i>
+        <span>Categorias</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="border-t border-[#6C4637] pt-4 flex flex-col">
+    <button
+      id="logout-btn"
+      class="group flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#6C4637] hover:text-white transition"
+    >
+      <i class="fi fi-rs-leave group-hover:hidden"></i>
+      <i class="fi fi-ss-leave group hidden group-hover:block"></i>
+      <span>Cerrar Sesión</span>
+    </button>
+  </div>
 </div>
 
 <script>
-  document.getElementById('logout-btn')?.addEventListener('click', async () => {
-    await fetch('/api/auth/logout', { method: 'POST' })
-    window.location.href = '/'
-  })
+  document.getElementById("logout-btn")?.addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/";
+  });
 </script>

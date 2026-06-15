@@ -1,17 +1,16 @@
 ---
 // src/pages/recipes.astro
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
-import Footer from '../components/Footer.astro';
-
+import Layout from "../layouts/Layout.astro";
 // Datos hardcodeados de la receta demo
 const receta = {
   title: "Tacos al Pastor Tradicionales",
-  description: "Prepara los auténticos tacos de la CDMX en tu casa. Una marinada perfecta a base de chiles guajillo, axiote y jugo de piña, montados en tortillas de maíz con su clásica guarnición de cebolla, cilantro y piña asada.",
+  description:
+    "Prepara los auténticos tacos de la CDMX en tu casa. Una marinada perfecta a base de chiles guajillo, axiote y jugo de piña, montados en tortillas de maíz con su clásica guarnición de cebolla, cilantro y piña asada.",
   prepTime: 45,
   portions: 4,
   rating: 4.9,
-  image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=1200",
+  image:
+    "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?q=80&w=1200",
   difficulty: "Media",
   ingredients: [
     "1 kg de lomo de cerdo cortado en filetes finos",
@@ -21,91 +20,121 @@ const receta = {
     "1/2 taza de jugo de piña natural",
     "1 piña fresca pelada y cortada en rebanadas",
     "Tortillas de maíz de buena calidad",
-    "Cebolla picada fina y cilantro fresco al gusto"
+    "Cebolla picada fina y cilantro fresco al gusto",
   ],
   steps: [
     "Licúa los chiles guajillo con el axiote, el vinagre, el jugo de piña, un diente de ajo y una pizca de sal hasta obtener un adobo terso.",
     "Marina los filetes de cerdo con el adobo asegurándote de cubrir cada capa. Deja reposar en el refrigerador por al menos 2 horas.",
     "En una sartén bien caliente o plancha, cocina la carne por ambos lados hasta que esté dorada y ligeramente crujiente en las orillas. Pícala en tiras finas.",
     "En la misma plancha, asa las rebanadas de piña hasta que se caramelicen sus azúcares naturales.",
-    "Arma los tacos doblando dos tortillas calientes, agrega una buena porción de carne, piña asada al gusto, y corona con cebolla, cilantro y tu salsa favorita."
-  ]
+    "Arma los tacos doblando dos tortillas calientes, agrega una buena porción de carne, piña asada al gusto, y corona con cebolla, cilantro y tu salsa favorita.",
+  ],
 };
 ---
 
 <Layout title={`${receta.title} - Recetópolis`}>
-  <Navbar />
+  <div class="max-w-4xl mx-auto">
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-[#6D7A84] hover:text-[#6C4637] mb-6 transition-colors group"
+    >
+      <i
+        class="fi fi-rr-arrow-left transition-transform group-hover:-translate-x-1"
+      ></i>
+      <span class="font-medium text-sm">Volver a inicio</span>
+    </a>
 
-  <main class="ml-64 bg-[#F4F3EF] min-h-screen p-8 overflow-x-hidden">
-    <div class="max-w-4xl mx-auto">
-      
-      <a href="/" class="inline-flex items-center gap-2 text-[#6D7A84] hover:text-[#6C4637] mb-6 transition-colors group">
-        <i class="fi fi-rr-arrow-left transition-transform group-hover:-translate-x-1"></i>
-        <span class="font-medium text-sm">Volver a inicio</span>
-      </a>
+    <div
+      class="bg-white rounded-3xl overflow-hidden border border-[#6C4637]/10 shadow-sm mb-8"
+    >
+      <div class="relative h-96 w-full bg-slate-200">
+        <img
+          src={receta.image}
+          alt={receta.title}
+          class="w-full h-full object-cover"
+        />
+        <span
+          class="absolute top-4 left-4 bg-[#5B6E4E] text-[#F4F3EF] text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider"
+        >
+          Dificultad: {receta.difficulty}
+        </span>
+      </div>
 
-      <div class="bg-white rounded-3xl overflow-hidden border border-[#6C4637]/10 shadow-sm mb-8">
-        <div class="relative h-96 w-full bg-slate-200">
-          <img 
-            src={receta.image} 
-            alt={receta.title} 
-            class="w-full h-full object-cover"
-          />
-          <span class="absolute top-4 left-4 bg-[#5B6E4E] text-[#F4F3EF] text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
-            Dificultad: {receta.difficulty}
-          </span>
-        </div>
+      <div class="p-6 sm:p-8">
+        <h1 class="text-4xl font-extrabold text-[#6C4637] mb-4 leading-tight">
+          {receta.title}
+        </h1>
+        <p
+          class="text-[#6D7A84] text-base leading-relaxed mb-6 border-b border-[#6C4637]/10 pb-6"
+        >
+          {receta.description}
+        </p>
 
-        <div class="p-6 sm:p-8">
-          <h1 class="text-4xl font-extrabold text-[#6C4637] mb-4 leading-tight">
-            {receta.title}
-          </h1>
-          <p class="text-[#6D7A84] text-base leading-relaxed mb-6 border-b border-[#6C4637]/10 pb-6">
-            {receta.description}
-          </p>
-
-          <div class="grid grid-cols-3 gap-4 text-center">
-            <div class="bg-[#F4F3EF]/50 p-3 rounded-2xl border border-[#6C4637]/5">
-              <i class="fi fi-rr-clock text-[#6C4637] text-xl block mb-1"></i>
-              <span class="text-xs text-[#6D7A84] block">Tiempo</span>
-              <span class="font-bold text-[#6C4637] text-sm">{receta.prepTime} min</span>
-            </div>
-            <div class="bg-[#F4F3EF]/50 p-3 rounded-2xl border border-[#6C4637]/5">
-              <i class="fi fi-rr-restaurant text-[#6C4637] text-xl block mb-1"></i>
-              <span class="text-xs text-[#6D7A84] block">Porciones</span>
-              <span class="font-bold text-[#6C4637] text-sm">{receta.portions} personas</span>
-            </div>
-            <div class="bg-[#F4F3EF]/50 p-3 rounded-2xl border border-[#6C4637]/5">
-              <i class="fi fi-sr-star text-[#A3624C] text-xl block mb-1"></i>
-              <span class="text-xs text-[#6D7A84] block">Calificación</span>
-              <span class="font-bold text-[#6C4637] text-sm">{receta.rating.toFixed(1)} / 5.0</span>
-            </div>
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div
+            class="bg-[#F4F3EF]/50 p-3 rounded-2xl border border-[#6C4637]/5"
+          >
+            <i class="fi fi-rr-clock text-[#6C4637] text-xl block mb-1"></i>
+            <span class="text-xs text-[#6D7A84] block">Tiempo</span>
+            <span class="font-bold text-[#6C4637] text-sm"
+              >{receta.prepTime} min</span
+            >
+          </div>
+          <div
+            class="bg-[#F4F3EF]/50 p-3 rounded-2xl border border-[#6C4637]/5"
+          >
+            <i class="fi fi-rr-restaurant text-[#6C4637] text-xl block mb-1"
+            ></i>
+            <span class="text-xs text-[#6D7A84] block">Porciones</span>
+            <span class="font-bold text-[#6C4637] text-sm"
+              >{receta.portions} personas</span
+            >
+          </div>
+          <div
+            class="bg-[#F4F3EF]/50 p-3 rounded-2xl border border-[#6C4637]/5"
+          >
+            <i class="fi fi-sr-star text-[#A3624C] text-xl block mb-1"></i>
+            <span class="text-xs text-[#6D7A84] block">Calificación</span>
+            <span class="font-bold text-[#6C4637] text-sm"
+              >{receta.rating.toFixed(1)} / 5.0</span
+            >
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
-        
-        <div class="md:col-span-2 bg-white p-6 rounded-3xl border border-[#6C4637]/10 shadow-sm h-fit">
-          <h2 class="text-xl font-bold text-[#6C4637] mb-4 flex items-center gap-2">
-            <i class="fi fi-rr-list-check flex items-center"></i> Ingredientes
-          </h2>
-          <ul class="flex flex-col gap-3">
-            {receta.ingredients.map((ingrediente) => (
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div
+        class="md:col-span-2 bg-white p-6 rounded-3xl border border-[#6C4637]/10 shadow-sm h-fit"
+      >
+        <h2
+          class="text-xl font-bold text-[#6C4637] mb-4 flex items-center gap-2"
+        >
+          <i class="fi fi-rr-list-check flex items-center"></i> Ingredientes
+        </h2>
+        <ul class="flex flex-col gap-3">
+          {
+            receta.ingredients.map((ingrediente) => (
               <li class="text-sm text-[#6C4637]/90 flex items-start gap-2">
                 <span class="text-[#A3624C] mt-0.5">•</span>
                 <span>{ingrediente}</span>
               </li>
-            ))}
-          </ul>
-        </div>
+            ))
+          }
+        </ul>
+      </div>
 
-        <div class="md:col-span-3 bg-white p-6 rounded-3xl border border-[#6C4637]/10 shadow-sm">
-          <h2 class="text-xl font-bold text-[#6C4637] mb-4 flex items-center gap-2">
-            <i class="fi fi-rr-pot flex items-center"></i> Preparación
-          </h2>
-          <ol class="flex flex-col gap-6">
-            {receta.steps.map((paso, index) => (
+      <div
+        class="md:col-span-3 bg-white p-6 rounded-3xl border border-[#6C4637]/10 shadow-sm"
+      >
+        <h2
+          class="text-xl font-bold text-[#6C4637] mb-4 flex items-center gap-2"
+        >
+          <i class="fi fi-rr-pot flex items-center"></i> Preparación
+        </h2>
+        <ol class="flex flex-col gap-6">
+          {
+            receta.steps.map((paso, index) => (
               <li class="flex gap-4">
                 <span class="flex-shrink-0 w-7 h-7 rounded-full bg-[#A3624C] text-white flex items-center justify-center font-bold text-sm">
                   {index + 1}
@@ -114,13 +143,10 @@ const receta = {
                   {paso}
                 </p>
               </li>
-            ))}
-          </ol>
-        </div>
-
+            ))
+          }
+        </ol>
       </div>
-
     </div>
-  </main>
-
+  </div>
 </Layout>

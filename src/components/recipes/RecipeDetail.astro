@@ -1,0 +1,55 @@
+---
+interface Props {
+  recipe: any;
+}
+
+const { recipe } = Astro.props;
+---
+
+<div class="bg-white rounded-2xl border border-[#E7E2DA] shadow-sm p-6 mb-8">
+  <h2 class="text-xl font-bold text-[#6C4637] mb-5">Información</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+    <!-- Autor -->
+    <div class="bg-[#F4F3EF] rounded-xl p-4">
+      <p class="text-xs uppercase text-gray-500 mb-1">Autor</p>
+
+      <p class="font-semibold text-[#6C4637]">
+        {recipe.authorName}
+      </p>
+    </div>
+
+    <!-- Categorías -->
+    <div class="bg-[#F4F3EF] rounded-xl p-4">
+      <p class="text-xs uppercase text-gray-500 mb-1">Categorías</p>
+
+      <div class="flex flex-wrap gap-2">
+        {
+          recipe.categories?.map((category: string) => (
+            <span class="px-2 py-1 bg-[#5B6E4E] text-white text-xs rounded-full">
+              {category}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Fecha -->
+    <div class="bg-[#F4F3EF] rounded-xl p-4">
+      <p class="text-xs uppercase text-gray-500 mb-1">Publicada</p>
+
+      <p class="font-semibold text-[#6C4637]">
+        {new Date(recipe.createdAt).toLocaleDateString("es-MX")}
+      </p>
+    </div>
+
+    <!-- Comunidad -->
+    <div class="bg-[#F4F3EF] rounded-xl p-4">
+      <p class="text-xs uppercase text-gray-500 mb-1">Tipo</p>
+
+      <p class="font-semibold text-[#6C4637]">
+        {recipe.isCommunityRecipe ? "Receta comunitaria" : "Receta privada"}
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+---
+// src/pages/recipes.astro
+import Layout from "@/layouts/Layout.astro";
+
+import RecipeHero from "@/components/recipes/RecipeHero.astro";
+import ReviewsSection from "@/components/recipes/ReviewsSection.astro";
+import ReviewForm from "@/components/recipes/ReviewForm.astro";
+import InstructionsSection from "@/components/recipes/InstructionsSection.astro";
+import IngredientsSection from "@/components/recipes/IngredientsSection.astro";
+
+// Datos hardcodeados de la receta demo
+const { id } = Astro.params;
+const user = (Astro.locals as any).user;
+
+interface Ingredient {
+  quantity: string;
+  unit: string;
+  name: string;
+}
+
+interface Recipe {
+  title: string;
+  description: string;
+  imagesUrl?: string[];
+  difficulty: string;
+  preparationTime: number;
+  portions: number;
+  averageRating: number;
+  ingredients: Ingredient[];
+  instructions: string[];
+}
+
+interface Review {
+  userId: string;
+  userName?: string;
+  rating: number;
+  comment: string;
+}
+
+const res = await fetch(`${Astro.url.origin}/api/recipes/${id}`);
+
+if (!res.ok) return Astro.redirect("/");
+
+const recipe = (await res.json()) as Recipe;
+
+// Obtener reviews de la receta
+const resReviews = await fetch(`${Astro.url.origin}/api/reviews/${id}`);
+const reviews = (await resReviews.json()) as Review[];
+---
+
+<Layout title={`${recipe.title} - Recetópolis`}>
+  <div class="max-w-7xl mx-auto">
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-[#6D7A84] hover:text-[#6C4637] mb-6 transition-colors group"
+    >
+      <i
+        class="fi fi-rr-arrow-left transition-transform group-hover:-translate-x-1"
+      ></i>
+      <span class="font-medium text-sm">Volver a inicio</span>
+    </a>
+    <RecipeHero recipe={recipe} />
+
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-8 mt-8">
+      <div class="md:col-span-2">
+        <IngredientsSection ingredients={recipe.ingredients} />
+      </div>
+
+      <div class="md:col-span-3">
+        <InstructionsSection instructions={recipe.instructions} />
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <ReviewsSection reviews={reviews} />
+
+      {user && <ReviewForm recipeId={id} userId={user.userId} />}
+    </div>
+  </div>
+</Layout>

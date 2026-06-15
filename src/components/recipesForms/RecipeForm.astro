@@ -1,0 +1,252 @@
+---
+import RecipeBasicInfo from "./RecipeBasicInfo.astro";
+import IngredientFields from "./IngredientFields.astro";
+import InstructionFields from "./InstructionFields.astro";
+
+const { recipe = null, mode = "create", userId } = Astro.props;
+
+const isEdit = mode === "edit";
+---
+
+<div class="w-full max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-md">
+  <h1 class="text-3xl font-bold text-[#6C4637] mb-8">Editar receta</h1>
+  <form id="recipe-form" class="flex flex-col gap-6">
+    <RecipeBasicInfo recipe={recipe} />
+
+    <IngredientFields ingredients={recipe?.ingredients ?? []} />
+
+    <InstructionFields instructions={recipe?.instructions ?? []} />
+
+    <p id="error-msg" class="hidden text-red-500 text-sm"></p>
+
+    <button
+      type="submit"
+      class="w-full py-3 bg-[#6C4637] text-white rounded-xl font-semibold hover:bg-[#5a3a2e] transition"
+    >
+      {isEdit ? "Guardar cambios" : "Publicar receta"}
+    </button>
+  </form>
+</div>
+
+<script
+  define:vars={{
+    recipeId: recipe?._id ?? null,
+    mode,
+    userId,
+  }}
+>
+  const isEdit = mode === "edit";
+
+  const form = document.getElementById("recipe-form");
+  const errorMsg = document.getElementById("error-msg");
+
+  const ingredientsList = document.getElementById("ingredients-list");
+  const instructionsList = document.getElementById("instructions-list");
+
+  const addIngredientBtn = document.getElementById("add-ingredient");
+  const addInstructionBtn = document.getElementById("add-instruction");
+
+  const submitBtn = form?.querySelector('button[type="submit"]');
+
+  // =======================
+  // INGREDIENTES
+  // =======================
+
+  function addIngredient(data = null) {
+    const div = document.createElement("div");
+    div.className = "grid grid-cols-3 gap-2 items-center";
+
+    const nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.placeholder = "Nombre";
+    nameInput.value = data?.name || "";
+    nameInput.setAttribute("data-ingredient", "name");
+    nameInput.className = "px-3 py-2 border border-gray-200 rounded-xl text-sm";
+
+    const quantityInput = document.createElement("input");
+    quantityInput.type = "text";
+    quantityInput.placeholder = "Cantidad";
+    quantityInput.value = data?.quantity || "";
+    quantityInput.setAttribute("data-ingredient", "quantity");
+    quantityInput.className =
+      "px-3 py-2 border border-gray-200 rounded-xl text-sm";
+
+    const unitInput = document.createElement("input");
+    unitInput.type = "text";
+    unitInput.placeholder = "Unidad";
+    unitInput.value = data?.unit || "";
+    unitInput.setAttribute("data-ingredient", "unit");
+    unitInput.className = "px-3 py-2 border border-gray-200 rounded-xl text-sm";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.textContent = "✕";
+    removeBtn.className = "text-red-400 hover:text-red-600";
+
+    removeBtn.addEventListener("click", () => {
+      div.remove();
+    });
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex gap-2";
+
+    wrapper.appendChild(unitInput);
+    wrapper.appendChild(removeBtn);
+
+    div.appendChild(nameInput);
+    div.appendChild(quantityInput);
+    div.appendChild(wrapper);
+
+    ingredientsList?.appendChild(div);
+  }
+
+  // =======================
+  // INSTRUCCIONES
+  // =======================
+
+  function updateStepNumbers() {
+    document.querySelectorAll("[data-step-number]").forEach((el, index) => {
+      el.textContent = `${index + 1}.`;
+    });
+  }
+
+  function addInstruction(text = "") {
+    const index = instructionsList?.children.length || 0;
+
+    const div = document.createElement("div");
+    div.className = "flex gap-2 items-start";
+
+    const stepNumber = document.createElement("span");
+    stepNumber.textContent = `${index + 1}.`;
+    stepNumber.className = "mt-2 text-sm font-bold text-[#6C4637] w-6";
+    stepNumber.setAttribute("data-step-number", "");
+
+    const textarea = document.createElement("textarea");
+    textarea.rows = 2;
+    textarea.value = text;
+    textarea.placeholder = "Describe el paso...";
+    textarea.setAttribute("data-instruction", "");
+    textarea.className =
+      "flex-1 px-3 py-2 border border-gray-200 rounded-xl text-sm resize-none";
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.textContent = "✕";
+    removeBtn.className = "mt-2 text-red-400 hover:text-red-600";
+
+    removeBtn.addEventListener("click", () => {
+      div.remove();
+      updateStepNumbers();
+    });
+
+    div.appendChild(stepNumber);
+    div.appendChild(textarea);
+    div.appendChild(removeBtn);
+
+    instructionsList?.appendChild(div);
+  }
+
+  // =======================
+  // SUBMIT
+  // =======================
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    try {
+      if (!userId) {
+        throw new Error("Debes iniciar sesión");
+      }
+
+      submitBtn?.setAttribute("disabled", "true");
+
+      if (submitBtn) {
+        submitBtn.textContent = isEdit ? "Guardando..." : "Publicando...";
+      }
+
+      const ingredients = Array.from(ingredientsList?.children || [])
+        .map((div) => ({
+          name:
+            div.querySelector('[data-ingredient="name"]')?.value?.trim() || "",
+
+          quantity:
+            div.querySelector('[data-ingredient="quantity"]')?.value?.trim() ||
+            "",
+
+          unit:
+            div.querySelector('[data-ingredient="unit"]')?.value?.trim() || "",
+        }))
+        .filter((i) => i.name && i.quantity && i.unit);
+
+      const instructions = Array.from(
+        document.querySelectorAll("[data-instruction]"),
+      )
+        .map((el) => el.value?.trim())
+        .filter(Boolean);
+
+      const body = {
+        title: form.querySelector('[name="title"]')?.value?.trim(),
+
+        description: form.querySelector('[name="description"]')?.value?.trim(),
+
+        categories: [form.querySelector('[name="category"]')?.value],
+
+        difficulty: form.querySelector('[name="difficulty"]')?.value,
+
+        preparationTime: Number(
+          form.querySelector('[name="preparationTime"]')?.value,
+        ),
+
+        isCommunityRecipe:
+          form.querySelector('[name="isCommunityRecipe"]')?.checked || false,
+
+        ingredients,
+        instructions,
+      };
+
+      if (!isEdit) {
+        body.authorId = userId;
+      }
+
+      const url = isEdit ? `/api/recipes/${recipeId}` : "/api/recipes";
+
+      const method = isEdit ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Error");
+      }
+
+      window.location.href = "/profile/recipes";
+    } catch (error) {
+      errorMsg.textContent = error?.message || "Error inesperado";
+
+      errorMsg.classList.remove("hidden");
+    } finally {
+      submitBtn?.removeAttribute("disabled");
+
+      if (submitBtn) {
+        submitBtn.textContent = isEdit ? "Guardar cambios" : "Publicar receta";
+      }
+    }
+  }
+
+  // =======================
+  // EVENTOS
+  // =======================
+
+  addIngredientBtn?.addEventListener("click", () => addIngredient());
+
+  addInstructionBtn?.addEventListener("click", () => addInstruction());
+
+  form?.addEventListener("submit", handleSubmit);
+</script>

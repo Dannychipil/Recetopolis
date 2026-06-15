@@ -1,135 +1,165 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
 
-// Datos dinámicos
-const recetasPopulares = Array.from({ length: 6 });
-const recetasPuntuacion = Array.from({ length: 6 });
+const user = (Astro.locals as any).user;
+const cookie = Astro.request.headers.get("cookie") || "";
+
+// Obtener todas las recetas
+const res = await fetch(`${Astro.url.origin}/api/recipes`);
+const recipes = await res.json();
+
+// Obtener favoritos si hay usuario logueado
+let favoriteIds: string[] = [];
+if (user) {
+  const resfav = await fetch(
+    `${Astro.url.origin}/api/users/${user.userId}/favorites`,
+    {
+      headers: { cookie },
+    },
+  );
+  const favData = await resfav.json();
+  favoriteIds = Array.isArray(favData)
+    ? favData.map((r) => r._id.toString())
+    : [];
+}
+
+// Populares — las más recientes primero (mejor para cuando hay pocos ratings)
+const populares = [...recipes].sort(
+  (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+);
+
+// Mejor puntuación — por averageRating
+const mejorPuntuacion = [...recipes]
+  .filter((r) => r.ratingsCount > 0) // solo las que tienen ratings
+  .sort((a, b) => b.averageRating - a.averageRating);
 ---
 
 <Layout title="Recetópolis - Tu rincón de recetas">
-    <!-- TITULO -->
-    <h1 class="text-5xl text-center text-[#6C4637] font-bold mb-12">
-        Recetópolis
-    </h1>
+  <!-- TITULO -->
+  <h1 class="text-5xl text-center text-[#6C4637] font-bold mb-12">
+    Recetópolis
+  </h1>
 
-    <!-- BUSCADOR -->
-    <div class="w-full flex justify-end">
-        <div class="relative w-full lg:w-105">
+  <!-- BUSCADOR -->
+  <div class="w-full flex justify-end">
+    <div class="relative w-full lg:w-105">
+      <input
+        type="text"
+        placeholder="Buscar recetas..."
+        class="w-full py-3 pl-5 pr-12 rounded-2xl border border-[#D9D0C7] bg-white shadow-sm outline-none focus:ring-2 focus:ring-[#6C4637]"
+      />
 
-            <input
-                type="text"
-                placeholder="Buscar recetas..."
-                class="w-full py-3 pl-5 pr-12 rounded-2xl border border-[#D9D0C7] bg-white shadow-sm outline-none focus:ring-2 focus:ring-[#6C4637]"
-            />
+      <button
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-[#6C4637] text-x cursor-pointer"
+      >
+        <i class="fi fi-br-search text-2xl mx-2 my-4"></i>
+      </button>
+    </div>
+  </div>
 
-            <button
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#6C4637] text-x cursor-pointer"
-            >
-                <i class="fi fi-br-search text-2xl mx-2 my-4    "></i>
-            </button>
-        </div>
+  <!-- ================= MEJOR PUNTUACIÓN ================= -->
+  <section class="mb-14">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-2xl font-semibold text-[#6C4637]">Populares</h2>
     </div>
 
+    <div class="relative flex items-center">
+      <!-- BOTON IZQUIERDA -->
+      <button
+        onclick="scrollCarousel('populares', -320)"
+        class="absolute left-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
+      >
+        ❮
+      </button>
 
-    <!-- ================= MEJOR PUNTUACIÓN ================= -->
-    <section class="mb-14">
+      <!-- CARRUSEL -->
+      <div
+        id="populares"
+        class="flex gap-5 overflow-x-hidden scroll-smooth px-14 py-2 w-full scrollbar-hide"
+      >
+        <!-- CARRUSEL POPULARES -->
+        {
+          populares.map((recipe) => (
+            <Card
+              id={recipe._id}
+              title={recipe.title}
+              description={recipe.description}
+              prepTime={recipe.preparationTime}
+              rating={recipe.averageRating}
+              image={recipe.imagesUrl?.[0]}
+              favorito={favoriteIds.includes(recipe._id.toString())}
+              userId={user?.userId}
+            />
+          ))
+        }
+      </div>
 
-        <div class="flex items-center justify-between mb-5">
-            <h2 class="text-2xl font-semibold text-[#6C4637]">
-                Populares
-            </h2>
-        </div>
+      <!-- BOTON DERECHA -->
+      <button
+        onclick="scrollCarousel('populares', 320)"
+        class="absolute right-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
+      >
+        ❯
+      </button>
+    </div>
+  </section>
 
-        <div class="relative flex items-center">
+  <section class="mb-14">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-2xl font-semibold text-[#6C4637]">Mejor Puntuación</h2>
+    </div>
 
-            <!-- BOTON IZQUIERDA -->
-            <button
-                onclick="scrollCarousel('populares', -320)"
-                class="absolute left-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
-            >
-                ❮
-            </button>
+    <div class="relative flex items-center">
+      <!-- BOTON IZQUIERDA -->
+      <button
+        onclick="scrollCarousel('puntuacion', -320)"
+        class="absolute left-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
+      >
+        ❮
+      </button>
 
-            <!-- CARRUSEL -->
-            <div
-                id="populares"
-                class="flex gap-5 overflow-x-hidden scroll-smooth px-14 py-2 w-full scrollbar-hide"
-            >
+      <!-- CARRUSEL -->
+      <div
+        id="puntuacion"
+        class="flex gap-5 overflow-x-hidden scroll-smooth px-14 py-2 w-full scrollbar-hide"
+      >
+        {
+          mejorPuntuacion.map((recipe) => (
+            <Card
+              id={recipe._id}
+              title={recipe.title}
+              description={recipe.description}
+              prepTime={recipe.preparationTime}
+              rating={recipe.averageRating}
+              image={recipe.imagesUrl?.[0]}
+              favorito={favoriteIds.includes(recipe._id.toString())}
+              userId={user?.userId}
+            />
+          ))
+        }
+      </div>
 
-                {
-                    recetasPopulares.map(() => (
-                        <Card favorito={false} />
-                    ))
-                }
-
-            </div>
-
-            <!-- BOTON DERECHA -->
-            <button
-                onclick="scrollCarousel('populares', 320)"
-                class="absolute right-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
-            >
-                ❯
-            </button>
-
-        </div>
-    </section>
-
-    <section class="mb-14">
-
-        <div class="flex items-center justify-between mb-5">
-            <h2 class="text-2xl font-semibold text-[#6C4637]">
-                Mejor Puntuación
-            </h2>
-        </div>
-
-        <div class="relative flex items-center">
-
-            <!-- BOTON IZQUIERDA -->
-            <button
-                onclick="scrollCarousel('puntuacion', -320)"
-                class="absolute left-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
-            >
-                ❮
-            </button>
-
-            <!-- CARRUSEL -->
-            <div
-                id="puntuacion"
-                class="flex gap-5 overflow-x-hidden scroll-smooth px-14 py-2 w-full scrollbar-hide"
-            >
-
-                {
-                    recetasPuntuacion.map(() => (
-                        <Card favorito={true} />
-                    ))
-                }
-
-            </div>
-
-            <!-- BOTON DERECHA -->
-            <button
-                onclick="scrollCarousel('puntuacion', 320)"
-                class="absolute right-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
-            >
-                ❯
-            </button>
-
-        </div>
-    </section>
-
+      <!-- BOTON DERECHA -->
+      <button
+        onclick="scrollCarousel('puntuacion', 320)"
+        class="absolute right-0 z-10 bg-[#6C4637] text-white w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center"
+      >
+        ❯
+      </button>
+    </div>
+  </section>
 </Layout>
 
 <script lang="ts" is:inline>
-    function scrollCarousel(id: string, amount: number) {
-        const container = document.getElementById(id);
+  function scrollCarousel(id: string, amount: number) {
+    const container = document.getElementById(id);
 
-        container?.scrollBy({
-            left: amount,
-            behavior: "smooth"
-        });
-    }
+    container?.scrollBy({
+      left: amount,
+      behavior: "smooth",
+    });
+  }
 
-    (window as any).scrollCarousel = scrollCarousel;
+  (window as any).scrollCarousel = scrollCarousel;
 </script>

@@ -1,0 +1,167 @@
+---
+const { recipe, author, editable = false } = Astro.props;
+---
+
+<div
+  class="bg-white rounded-3xl overflow-hidden border border-[#6C4637]/10 shadow-sm mb-8"
+>
+  <!-- IMAGEN -->
+  <div class="relative h-96 w-full bg-slate-200">
+    <img
+      src={recipe.imagesUrl?.[0] ||
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"}
+      alt={recipe.title}
+      class="w-full h-full object-cover"
+    />
+
+    <!-- DIFICULTAD -->
+    <span
+      class="absolute top-4 left-4 bg-[#5B6E4E] text-[#F4F3EF] text-xs font-bold px-4 py-2 rounded-full uppercase tracking-wider"
+    >
+      {recipe.difficulty}
+    </span>
+  </div>
+
+  <!-- CONTENIDO -->
+  <div class="p-8">
+    <!-- CALIFICACIÓN -->
+    <div class="flex items-center gap-5 mb-4">
+      <div class="flex items-center gap-2 text-yellow-500">
+        <i class="fi fi-sr-star"></i>
+
+        <span class="font-semibold">
+          {recipe.averageRating?.toFixed(1) || "0.0"}
+        </span>
+      </div>
+
+      <span class="text-sm text-[#6D7A84]">
+        {recipe.ratingsCount || 0} reseñas
+      </span>
+    </div>
+
+    <!-- TITULO -->
+    <h1 class="text-4xl font-extrabold text-[#6C4637] leading-tight">
+      {recipe.title}
+    </h1>
+
+    <!-- AUTOR -->
+    <div class="flex items-center gap-4 mt-6">
+      <img
+        src={author?.avatarUrl || "/default-avatar.png"}
+        alt={author?.username}
+        class="w-14 h-14 rounded-full object-cover border border-[#E7E2DA]"
+      />
+
+      <div>
+        <p class="font-semibold text-[#6C4637]">
+          {author?.username || "Autor"}
+        </p>
+
+        <p class="text-sm text-[#6D7A84]">
+          Publicado el {
+            recipe.createdAt
+              ? new Date(recipe.createdAt).toLocaleDateString()
+              : "Recientemente"
+          }
+        </p>
+      </div>
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <p
+      class="mt-6 text-[#6D7A84] leading-relaxed border-b border-[#E7E2DA] pb-6"
+    >
+      {recipe.description}
+    </p>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+      <div
+        class="bg-[#F4F3EF] p-4 rounded-2xl border border-[#E7E2DA] text-center"
+      >
+        <i class="fi fi-rr-clock text-[#6C4637] text-xl block mb-2"></i>
+
+        <span class="text-xs text-[#6D7A84] block"> Tiempo </span>
+
+        <span class="font-bold text-[#6C4637]">
+          {recipe.preparationTime} min
+        </span>
+      </div>
+
+      <div
+        class="bg-[#F4F3EF] p-4 rounded-2xl border border-[#E7E2DA] text-center"
+      >
+        <i class="fi fi-rr-restaurant text-[#6C4637] text-xl block mb-2"></i>
+
+        <span class="text-xs text-[#6D7A84] block"> Porciones </span>
+
+        <span class="font-bold text-[#6C4637]">
+          {recipe.portions}
+        </span>
+      </div>
+
+      <div
+        class="bg-[#F4F3EF] p-4 rounded-2xl border border-[#E7E2DA] text-center"
+      >
+        <i class="fi fi-rr-chart-line-up text-[#6C4637] text-xl block mb-2"></i>
+
+        <span class="text-xs text-[#6D7A84] block"> Dificultad </span>
+
+        <span class="font-bold text-[#6C4637]">
+          {recipe.difficulty}
+        </span>
+      </div>
+
+      <div
+        class="bg-[#F4F3EF] p-4 rounded-2xl border border-[#E7E2DA] text-center"
+      >
+        <i class="fi fi-rr-comment text-[#6C4637] text-xl block mb-2"></i>
+
+        <span class="text-xs text-[#6D7A84] block"> Reseñas </span>
+
+        <span class="font-bold text-[#6C4637]">
+          {recipe.ratingsCount || 0}
+        </span>
+      </div>
+    </div>
+
+    <!-- CATEGORÍAS -->
+    {
+      recipe.categories?.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-8">
+          {recipe.categories.map((category: string) => (
+            <span class="px-4 py-2 rounded-full bg-[#F4F3EF] text-[#6C4637] text-sm font-medium border border-[#E7E2DA]">
+              {category}
+            </span>
+          ))}
+        </div>
+      )
+    }
+
+    <!-- ACCIONES -->
+    <div class="flex flex-wrap gap-3 mt-8">
+      <button
+        class="px-5 py-3 rounded-xl bg-[#6C4637] text-white hover:bg-[#5a3a2e] transition"
+      >
+        ❤️ Favorito
+      </button>
+
+      <button
+        class="px-5 py-3 rounded-xl border border-[#6C4637] text-[#6C4637] hover:bg-[#F4F3EF] transition"
+      >
+        📤 Compartir
+      </button>
+
+      {
+        editable && (
+          <a
+            href={`/profile/recipes/edit/${recipe._id}`}
+            class="px-5 py-3 rounded-xl bg-[#A3624C] text-white hover:opacity-90 transition"
+          >
+            ✏️ Editar receta
+          </a>
+        )
+      }
+    </div>
+  </div>
+</div>

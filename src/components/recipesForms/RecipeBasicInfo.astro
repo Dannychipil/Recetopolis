@@ -1,0 +1,140 @@
+---
+const { recipe = {} } = Astro.props;
+---
+
+<div class="flex flex-col gap-6">
+  <!-- TÍTULO -->
+  <div class="flex flex-col gap-1">
+    <label class="text-sm font-medium text-gray-600"> Título </label>
+
+    <input
+      type="text"
+      name="title"
+      required
+      value={recipe.title || ""}
+      placeholder="Ej: Tacos de canasta"
+      class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition"
+    />
+  </div>
+
+  <!-- DESCRIPCIÓN -->
+  <div class="flex flex-col gap-1">
+    <label class="text-sm font-medium text-gray-600"> Descripción </label>
+
+    <textarea
+      name="description"
+      required
+      rows="3"
+      class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition resize-none"
+      placeholder="Describe brevemente tu receta..."
+      >{recipe.description || ""}</textarea
+    >
+  </div>
+
+  <!-- CATEGORÍA Y DIFICULTAD -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-gray-600"> Categoría </label>
+
+      <select
+        name="category"
+        required
+        class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition bg-white"
+      >
+        <option value="">Selecciona...</option>
+
+        <option
+          value="Desayunos"
+          selected={recipe.categories?.includes("Desayunos")}
+        >
+          Desayunos
+        </option>
+
+        <option
+          value="Comidas"
+          selected={recipe.categories?.includes("Comidas")}
+        >
+          Comidas
+        </option>
+
+        <option value="Cenas" selected={recipe.categories?.includes("Cenas")}>
+          Cenas
+        </option>
+
+        <option
+          value="Postres"
+          selected={recipe.categories?.includes("Postres")}
+        >
+          Postres
+        </option>
+
+        <option
+          value="Bebidas"
+          selected={recipe.categories?.includes("Bebidas")}
+        >
+          Bebidas
+        </option>
+
+        <option value="Snacks" selected={recipe.categories?.includes("Snacks")}>
+          Snacks
+        </option>
+      </select>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium text-gray-600"> Dificultad </label>
+
+      <select
+        name="difficulty"
+        required
+        class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition bg-white"
+      >
+        <option value="">Selecciona...</option>
+
+        <option value="easy" selected={recipe.difficulty === "easy"}>
+          Fácil
+        </option>
+
+        <option value="medium" selected={recipe.difficulty === "medium"}>
+          Media
+        </option>
+
+        <option value="hard" selected={recipe.difficulty === "hard"}>
+          Difícil
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- TIEMPO -->
+  <div class="flex flex-col gap-1">
+    <label class="text-sm font-medium text-gray-600">
+      Tiempo de preparación (minutos)
+    </label>
+
+    <input
+      type="number"
+      name="preparationTime"
+      required
+      min="1"
+      value={recipe.preparationTime || ""}
+      placeholder="Ej: 30"
+      class="px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#6C4637] transition"
+    />
+  </div>
+
+  <!-- COMUNIDAD -->
+  <div class="flex items-center gap-3">
+    <input
+      type="checkbox"
+      name="isCommunityRecipe"
+      id="isCommunityRecipe"
+      checked={recipe.isCommunityRecipe}
+      class="w-4 h-4 accent-[#6C4637]"
+    />
+
+    <label for="isCommunityRecipe" class="text-sm text-gray-600">
+      Compartir como receta de comunidad
+    </label>
+  </div>
+</div>

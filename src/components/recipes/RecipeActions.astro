@@ -1,0 +1,50 @@
+---
+interface Props {
+  isOwner?: boolean;
+  recipeId: string;
+}
+
+const { isOwner = false, recipeId } = Astro.props;
+---
+
+<div class="bg-white rounded-2xl border border-[#E7E2DA] shadow-sm p-5 mb-8">
+  <div class="flex flex-wrap gap-3">
+    {
+      !isOwner && (
+        <>
+          <button class="flex items-center gap-2 px-5 py-3 bg-[#6C4637] text-white rounded-xl hover:bg-[#5a3a2e] transition">
+            <i class="fi fi-rr-heart" />
+            Guardar
+          </button>
+
+          <button class="flex items-center gap-2 px-5 py-3 border border-[#6C4637] text-[#6C4637] rounded-xl hover:bg-[#F4F3EF] transition">
+            <i class="fi fi-rr-share" />
+            Compartir
+          </button>
+        </>
+      )
+    }
+
+    {
+      isOwner && (
+        <>
+          <a
+            href={`/profile/recipes/edit/${recipeId}`}
+            class="flex items-center gap-2 px-5 py-3 bg-[#6C4637] text-white rounded-xl hover:bg-[#5a3a2e] transition"
+          >
+            <i class="fi fi-rr-pencil" />
+            Editar receta
+          </a>
+
+          <button
+            id="delete-recipe"
+            class="flex items-center gap-2 px-5 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
+          >
+            <i class="fi fi-rr-trash" />
+            Eliminar
+          </button>
+        </>
+      )
+    }
+  </div>
+</div>
